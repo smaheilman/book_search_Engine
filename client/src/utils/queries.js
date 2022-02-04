@@ -15,44 +15,7 @@ export const QUERY_USER = gql`
         title
         image
         link
-     }  
-    }
-  }
-`;
-
-export const QUERY_ME = gql`
-  {
-    me {
-      _id
-      username
-      email
-      bookCount
-      books{
-        _id
-        authors
-        description
-        title
-        image
-        link
-     }  
-    }
-  }
-`;
-
-export const QUERY_ME_BASIC = gql`
-  {
-    me {
-      _id
-      username
-      email
-      bookCount
-      books{
-        _id
-        authors
-        description
-        title
-        image
-        link
+        bookId
      }  
     }
   }
