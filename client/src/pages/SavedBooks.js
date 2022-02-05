@@ -3,34 +3,42 @@ import { Jumbotron, Container, CardColumns, Card, Button } from 'react-bootstrap
 import { useQuery, useMutation } from '@apollo/client';
 import { QUERY_USER } from '../utils/queries';
 import { DELETE_BOOK } from '../utils/mutations';
-//import Auth from '../utils/auth';
+import Auth from '../utils/auth';
+import { removeBookId } from '../utils/localStorage';
 
 const SavedBooks = (props) => {
 
   const [deleteBook] = useMutation(DELETE_BOOK);
   const { loading, data } = useQuery(QUERY_USER);
 
-  const user = data?.me || data?.user || {};
+  const user = data?.user || {};
 
 
   if (loading) {
     return <div>Loading...</div>;
   }
 
-  if (!user?.username) {
-    return (
-      <h4>
-        You need to be logged in to see this. Use the navigation links above to
-        sign up or log in!
-      </h4>
-    );
-  }
+ if (!user?.username) {
+   return (
+     <h4>
+       You need to be logged in to see this. Use the navigation links above to
+       sign up or log in!
+     </h4>
+   );
+ }
 
-  const handleDeleteBook = async () => {
+  const handleDeleteBook = async (bookId) => {
+    const token = Auth.loggedIn() ? Auth.getToken() : null;
+
+    if (!token) {
+      return false;
+    }  
     try {
       await deleteBook({
-        variables: { id: user._id },
+        variables: { bookId },
       });
+
+      removeBookId(bookId)
     } catch (e) {
       console.error(e);
     }

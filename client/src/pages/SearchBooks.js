@@ -4,9 +4,9 @@ import { Jumbotron, Container, Col, Form, Button, Card, CardColumns } from 'reac
 import Auth from '../utils/auth';
 import { searchGoogleBooks } from '../utils/API';
 import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { ADD_BOOK } from '../utils/mutations';
-import { QUERY_USER } from '../utils/queries';
+//import { QUERY_USER } from '../utils/queries';
 
 const SearchBooks = () => {
   // create state for holding returned google api data
@@ -56,24 +56,6 @@ const SearchBooks = () => {
   };
 
   const [addBook] = useMutation(ADD_BOOK);
-  const { loading, data } = useQuery(QUERY_USER);
-
-  const user = data?.me || data?.user || {};
-
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!user?.username) {
-    return (
-      <h4>
-        You need to be logged in to see this. Use the navigation links above to
-        sign up or log in!
-      </h4>
-    );
-  }
-
   const handleAddBook = async (bookId) => {
     // find the book in `searchedBooks` state by the matching id
     const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
@@ -87,7 +69,7 @@ const SearchBooks = () => {
 
     try {
       await addBook({
-        variables: { id: user._id },
+        variables: { bookToSave },
       });
 
       // if book successfully saves to user's account, save book id to state
@@ -115,13 +97,11 @@ const SearchBooks = () => {
                 />
               </Col>
               <Col xs={12} md={4}>
-                <Button type='submit' variant='success' size='lg'>
                   <div className="flex-row mb-3">
                     <Button type='submit' variant='success' size='lg'>
                       Submit Search
                     </Button>
                   </div>
-                </Button>
               </Col>
             </Form.Row>
           </Form>
