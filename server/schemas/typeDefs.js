@@ -9,6 +9,16 @@ const typeDefs = gql`
     books: [Book]
   }
 
+  input BookInput{
+    _id: ID
+    authors: String
+    description: String
+    image: String
+    link: String
+    title: String
+    bookId: String
+  }
+
   type Book {
     _id: ID
     authors: String
